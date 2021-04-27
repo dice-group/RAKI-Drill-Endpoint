@@ -38,8 +38,7 @@ RUN conda activate ontolearn_env && conda install Cython
 COPY --from=intermediate /OntoPy /OntoPy
 
 WORKDIR /OntoPy
-RUN conda activate ontolearn_env && conda env update -n ontolearn_env
-RUN conda activate ontolearn_env && python -c 'from setuptools import setup; setup()' develop
+RUN conda activate ontolearn_env && pip install -e .
 
 RUN unzip embeddings.zip
 RUN unzip pre_trained_agents.zip
