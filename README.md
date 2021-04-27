@@ -59,16 +59,16 @@ CONTAINER=172.17.0.2:9080
   >          xmlns:owl="http://www.w3.org/2002/07/owl#"
   >          xml:base="https://dice-research.org/predictions/1619526593.1690164"
   >          xmlns="https://dice-research.org/predictions/1619526593.1690164#">
-
+  > 
   > <owl:Ontology rdf:about="https://dice-research.org/predictions/1619526593.1690164">
   >   <owl:imports rdf:resource="file:///OntoPy/KGs/Biopax/biopax.owl"/>
   > </owl:Ontology>
-
+  > 
   > <owl:Class rdf:about="#Pred_0">
   >   <owl:equivalentClass rdf:resource="http://www.biopax.org/examples/glycolysis#pathwayStep"/>
   >   <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">pathwayStep</rdfs:label>
   > </owl:Class>
-
-
+  > 
+  > 
   > </rdf:RDF>
   > ```
