@@ -2,15 +2,11 @@
 
 Part of RAKI D6.1
 
-To Build using your Private SSH Key `~/.ssh/id_rsa`,
+To Build the Docker Endpoint for DRILL
 
 ```
-docker build --build-arg SSH_PRIVATE_KEY="$(cat ~/.ssh/id_rsa)" "."
+docker build -t drill:latest "."
 ```
-
-Documentation for the Endpoint can be found on:
-
-https://github.com/dice-group/RAKI-D5.1
 
 Quick start:
 

@@ -6,15 +6,9 @@ FROM ubuntu as intermediate
 RUN apt-get update
 RUN apt-get install -y git
 
-# add credentials on build
-# source: https://itnext.io/building-docker-images-from-private-git-repositories-using-ssh-login-433edf5a18f2
-ARG SSH_PRIVATE_KEY
-RUN eval $(ssh-agent) && \
-    echo "${SSH_PRIVATE_KEY}" | ssh-add - && \
-    ssh-keyscan -H github.com >> /etc/ssh/ssh_known_hosts && \
-    git clone git@github.com:dice-group/OntoPy.git -b master
+RUN git clone https://github.com/dice-group/Ontolearn.git -b main
 
-ADD pre_trained_agents.zip /OntoPy
+ADD pre_trained_agents.zip /Ontolearn
 
 
 # Dockerfile start
@@ -35,9 +29,9 @@ RUN conda create -n ontolearn_env python=3.7.1
 RUN conda activate ontolearn_env && conda install Cython
 
 # copy the repository form the previous image
-COPY --from=intermediate /OntoPy /OntoPy
+COPY --from=intermediate /Ontolearn /Ontolearn
 
-WORKDIR /OntoPy
+WORKDIR /Ontolearn
 RUN conda activate ontolearn_env && pip install -e .
 
 RUN unzip embeddings.zip
@@ -49,6 +43,6 @@ EXPOSE 9080
 
 CMD conda activate ontolearn_env && \
     simple_drill_endpoint \
-        --path_knowledge_base /OntoPy/KGs/Biopax/biopax.owl \
-	--path_knowledge_base_embeddings /OntoPy/embeddings/Shallom_Biopax/Shallom_entity_embeddings.csv \
-	--pretrained_drill_avg_path /OntoPy/pre_trained_agents/Biopax/DrillHeuristic_averaging/DrillHeuristic_averaging.pth
+        --path_knowledge_base /Ontolearn/KGs/Biopax/biopax.owl \
+        --path_knowledge_base_embeddings /Ontolearn/embeddings/Shallom_Biopax/Shallom_entity_embeddings.csv \
+        --pretrained_drill_avg_path /Ontolearn/pre_trained_agents/Biopax/DrillHeuristic_averaging/DrillHeuristic_averaging.pth
