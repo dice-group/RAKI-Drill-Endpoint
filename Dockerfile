@@ -9,7 +9,7 @@ RUN apt-get install -y git
 RUN git clone https://github.com/dice-group/Ontolearn.git -b master
 
 ADD pre_trained_agents.zip /Ontolearn
-
+ADD embeddings.zip /Ontolearn
 
 # Dockerfile start
 FROM continuumio/anaconda3
