@@ -25,7 +25,7 @@ RUN conda update -n base -c defaults conda
 RUN conda init bash
 
 RUN apt-get -y install gcc
-RUN conda create -n ontolearn_env python=3.7.1
+RUN conda create -n ontolearn_env python=3.8.0
 RUN conda activate ontolearn_env && conda install Cython
 
 # copy the repository form the previous image
