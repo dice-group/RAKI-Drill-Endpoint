@@ -14,7 +14,7 @@ ADD pre_trained_agents.zip /Ontolearn
 # Dockerfile start
 FROM continuumio/anaconda3
 
-RUN mkdir /usr/share/man/man1/
+RUN mkdir -p /usr/share/man/man1/
 RUN apt-get update && apt-get -y install openjdk-11-jre unzip
 
 # enable shell for conda
