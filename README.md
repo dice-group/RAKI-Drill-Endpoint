@@ -2,79 +2,69 @@
 
 Part of RAKI D6.1
 
-# Manuel Installation
-Create a anaconda virtual environment and install dependencies.
+## 1. Creating an endpoint for DRILL manually 
+Here, we provide each command to create an endpoint to use [DRILL](https://arxiv.org/abs/2106.15373)
 ```sh
-git clone https://github.com/dice-group/RAKI-Drill-Endpoint # clone the repo.
-cd RAKI-Drill-Endpoint # enter to the folder.
-unzip embeddings.zip
-unzip LPs.zip
-unzip pre_trained_agents.zip
-git clone https://github.com/dice-group/Ontolearn.git
-cd Ontolearn
-git checkout bf2f94f56bf4508b53a540b5e580a59d73689ccb # use this specific version
-conda create --name temp python=3.8 # Proceed ([y]/n)? y 
-conda activate temp
-pip install -e .
-cd ..
-# To run endpoint
+# (1) clone the repo & unzip necessary files.
+git clone https://github.com/dice-group/RAKI-Drill-Endpoint && cd RAKI-Drill-Endpoint 
+unzip embeddings.zip && unzip LPs.zip && unzip pre_trained_agents.zip
+# (2) close the most recent dev. branch of ontolearn
+git clone https://github.com/dice-group/Ontolearn.git -b develop && cd Ontolearn
+# (3) Create an anaconda virtual environment and install dependencies.
+conda create --name temp python=3.8  && conda activate temp
+pip install -e . && cd ..
+# (4) Execute python script to create flask based endpoint.
 python Ontolearn/examples/simple_drill_endpoint.py --path_knowledge_base 'Ontolearn/KGs/Biopax/biopax.owl' --path_knowledge_base_embeddings 'embeddings/ConEx_Biopax/ConEx_entity_embeddings.csv' --pretrained_drill_avg_path 'pre_trained_agents/Biopax/DrillHeuristic_averaging/DrillHeuristic_averaging.pth'
-# open a new terminal here 
-curl http://0.0.0.0:9080/status # To test
-{"status":"ready"} # Expected output
-jq '
-   .problems
-     ."((pathwayStep ⊓ (∀INTERACTION-TYPE.Thing)) ⊔ (sequenceInterval ⊓ (∀ID-VERSION.Thing)))"
-   | {
-      "positives": .positive_examples,
-      "negatives": .negative_examples
-     }' LPs/Biopax/lp.json         | curl -d@- http://0.0.0.0:9080/concept_learning
+#...
+# Running on http://192.168.2.108:9080/ # Copy this address
 ```
-
-To Build the Docker Endpoint for DRILL
-
-```
-docker build -t drill:latest "."
-```
-
-Quick start:
-
+### How to use the endpoint  
+pick one of the example learning problems and submit it to the system: (requires [jq](https://stedolan.github.io/jq/))
 ```sh
-CONTAINER=172.17.0.2:9080
-```
-
-* Check if system running:
-  (requires [curl](https://curl.se/))
-
-  ```sh
-  curl http://$CONTAINER/status
-  ```
-  
-  response: (JSON)
-  > ```json
-  > {"status":"ready"}
-  > ```
-  
-* Submit Learning task:
-
-  unzip some example learning problems:
-  ```sh
-  unzip LPs
-  ```
- 
-  pick one of the example learning problems and submit it to the system:
-  (requires [jq](https://stedolan.github.io/jq/))
-  ```sh
-  jq '
+# (1) Open a new terminal (Ctrl+Alt+T on ubuntu) to verify the endpoint.
+curl http://192.168.2.108:9080/status # => {"status":"ready"} # If you see this  all went well :)
+# (2) Use an example learning problem
+jq '
      .problems
        ."((pathwayStep ⊓ (∀INTERACTION-TYPE.Thing)) ⊔ (sequenceInterval ⊓ (∀ID-VERSION.Thing)))"
      | {
         "positives": .positive_examples,
         "negatives": .negative_examples
        }' LPs/Biopax/lp.json \
-		   | curl -d@- http://$CONTAINER/concept_learning
-  ```
-  
+		   | curl -d@- http://192.168.2.108:9080/concept_learning
+```
+
+## 2. Creating an endpoint for DRILL via Docker
+```sh
+git clone https://github.com/dice-group/RAKI-Drill-Endpoint && cd RAKI-Drill-Endpoint 
+unzip LPs # unzip learning problems file to use it later on
+sudo docker build -t drill:latest "." 
+# Successfully tagged drill:latest # if you see **done**, all went well
+sudo docker images # to see installed image
+```
+
+Run the docker image.
+```
+sudo docker run drill
+# expected to see 
+# Running on http://172.17.0.3:9080/
+```
+### How to use the endpoint  
+pick one of the example learning problems and submit it to the system: (requires [jq](https://stedolan.github.io/jq/))
+  ```sh
+# (1) Open a new terminal (Ctrl+Alt+T on ubuntu) to verify the endpoint.
+curl http://172.17.0.3:9080/status
+{"status":"ready"} # If you see this  all went well :)
+# (2) Use an example learning problem
+jq '
+     .problems
+       ."((pathwayStep ⊓ (∀INTERACTION-TYPE.Thing)) ⊔ (sequenceInterval ⊓ (∀ID-VERSION.Thing)))"
+     | {
+        "positives": .positive_examples,
+        "negatives": .negative_examples
+       }' LPs/Biopax/lp.json \
+		   | curl -d@- http://172.17.0.3:9080/concept_learning
+```
   response: (OWL rdf/xml)
   > ```xml
   > <?xml version="1.0"?>
@@ -97,3 +87,7 @@ CONTAINER=172.17.0.2:9080
   > 
   > </rdf:RDF>
   > ```
+Congrats!
+
+## Contact
+For any questions, please contact:  ```caglar.demir@upb.de``` / ```caglardemir8@gmail.com```

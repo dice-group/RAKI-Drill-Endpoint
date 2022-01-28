@@ -6,7 +6,7 @@ FROM ubuntu as intermediate
 RUN apt-get update
 RUN apt-get install -y git
 
-RUN git clone https://github.com/dice-group/Ontolearn.git -b develop
+RUN git clone https://github.com/dice-group/Ontolearn.git -b master
 
 ADD pre_trained_agents.zip /Ontolearn
 ADD embeddings.zip /Ontolearn
@@ -37,7 +37,12 @@ RUN conda activate ontolearn_env && pip install -e .
 RUN unzip embeddings.zip
 RUN unzip pre_trained_agents.zip
 
+WORKDIR /raki
 
 EXPOSE 9080
 
-CMD conda activate ontolearn_env && python examples/simple_drill_endpoint.py --path_knowledge_base 'KGs/Biopax/biopax.owl' --path_knowledge_base_embeddings 'embeddings/ConEx_Biopax/ConEx_entity_embeddings.csv' --pretrained_drill_avg_path 'pre_trained_agents/Biopax/DrillHeuristic_averaging/DrillHeuristic_averaging.pth'
+CMD conda activate ontolearn_env && \
+    simple_drill_endpoint \
+        --path_knowledge_base /Ontolearn/KGs/Biopax/biopax.owl \
+        --path_knowledge_base_embeddings /Ontolearn/embeddings/Shallom_Biopax/Shallom_entity_embeddings.csv \
+        --pretrained_drill_avg_path /Ontolearn/pre_trained_agents/Biopax/DrillHeuristic_averaging/DrillHeuristic_averaging.pth
