@@ -2,6 +2,35 @@
 
 Part of RAKI D6.1
 
+# Manuel Installation
+Create a anaconda virtual environment and install dependencies.
+```sh
+git clone https://github.com/dice-group/RAKI-Drill-Endpoint # clone the repo.
+cd RAKI-Drill-Endpoint # enter to the folder.
+unzip embeddings.zip
+unzip LPs.zip
+unzip pre_trained_agents.zip
+git clone https://github.com/dice-group/Ontolearn.git
+cd Ontolearn
+git checkout bf2f94f56bf4508b53a540b5e580a59d73689ccb # use this specific version
+conda create --name temp python=3.8 # Proceed ([y]/n)? y 
+conda activate temp
+pip install -e .
+cd ..
+# To run endpoint
+python Ontolearn/examples/simple_drill_endpoint.py --path_knowledge_base 'Ontolearn/KGs/Biopax/biopax.owl' --path_knowledge_base_embeddings 'embeddings/ConEx_Biopax/ConEx_entity_embeddings.csv' --pretrained_drill_avg_path 'pre_trained_agents/Biopax/DrillHeuristic_averaging/DrillHeuristic_averaging.pth'
+# open a new terminal here 
+curl http://0.0.0.0:9080/status # To test
+{"status":"ready"} # Expected output
+jq '
+   .problems
+     ."((pathwayStep ⊓ (∀INTERACTION-TYPE.Thing)) ⊔ (sequenceInterval ⊓ (∀ID-VERSION.Thing)))"
+   | {
+      "positives": .positive_examples,
+      "negatives": .negative_examples
+     }' LPs/Biopax/lp.json         | curl -d@- http://0.0.0.0:9080/concept_learning
+```
+
 To Build the Docker Endpoint for DRILL
 
 ```
