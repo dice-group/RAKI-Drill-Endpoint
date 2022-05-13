@@ -6,7 +6,7 @@ FROM ubuntu as intermediate
 RUN apt-get update
 RUN apt-get install -y git
 
-RUN git clone https://github.com/dice-group/Ontolearn.git -b develop
+RUN git clone https://github.com/dice-group/Ontolearn.git -b develop && cd Ontolearn && git checkout bf2f94f56bf4508b53a540b5e580a59d73689ccb && cd ..
 
 ADD pre_trained_agents.zip /Ontolearn
 ADD embeddings.zip /Ontolearn
