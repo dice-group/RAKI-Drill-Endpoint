@@ -8,13 +8,17 @@ Here, we provide each command to create an endpoint to use [DRILL](https://arxiv
 # (1) clone the repo & unzip necessary files.
 git clone https://github.com/dice-group/RAKI-Drill-Endpoint && cd RAKI-Drill-Endpoint 
 unzip embeddings.zip && unzip LPs.zip && unzip pre_trained_agents.zip
-# (2) clone the ontolearn repo
-git clone https://github.com/dice-group/Ontolearn.git && cd Ontolearn && git checkout bf2f94f56bf4508b53a540b5e580a59d73689ccb 
-# (3) Create an anaconda virtual environment and install dependencies.
-conda create --name temp python=3.8  && conda activate temp
-pip install -e . && cd ..
+# (2) Clone the repository and create a python virtual enviroment via anaconda
+git clone https://github.com/dice-group/DRILL_RAKI && conda create -n drill_env python=3.9 && conda activate drill_env
+# (3) Install requirements
+cd DRILL_RAKI && unzip KGs.zip && wget --no-check-certificate --content-disposition https://github.com/dice-group/Ontolearn/archive/refs/tags/0.5.1.zip
+unzip Ontolearn-0.5.1.zip && cd Ontolearn-0.5.1 && pip install -e . && cd ..
+# For the Endpoint only
+cd .. && pip install flask==2.1.2
+# Test the installation. No error should occur.
+python -c "import ontolearn"
 # (4) Execute python script to create flask based endpoint.
-python Ontolearn/examples/simple_drill_endpoint.py --path_knowledge_base 'Ontolearn/KGs/Biopax/biopax.owl' --path_knowledge_base_embeddings 'embeddings/ConEx_Biopax/ConEx_entity_embeddings.csv' --pretrained_drill_avg_path 'pre_trained_agents/Biopax/DrillHeuristic_averaging/DrillHeuristic_averaging.pth'
+python DRILL_RAKI/flask_end_point.py --path_knowledge_base 'DRILL_RAKI/KGs/Biopax/biopax.owl' --path_knowledge_base_embeddings 'embeddings/ConEx_Biopax/ConEx_entity_embeddings.csv' --pretrained_drill_avg_path 'pre_trained_agents/Biopax/DrillHeuristic_averaging/DrillHeuristic_averaging.pth'
 #...
 # Running on http://0.0.0.0:9080/ # Copy this address
 ```
