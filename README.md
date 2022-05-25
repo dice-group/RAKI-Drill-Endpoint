@@ -48,8 +48,12 @@ sudo docker images # to see installed image
 ```
 
 Run the docker image.
-```
-sudo docker run drill
+```sh
+sudo docker run \
+-e KG=Biopax/biopax.owl \
+-e EMBEDDINGS=ConEx_Biopax/ConEx_entity_embeddings.csv \
+-e PRE_TRAINED_AGENT=Biopax/DrillHeuristic_averaging/DrillHeuristic_averaging.pth \
+drill:latest
 # expected to see
 # Running on http://172.17.0.2:9080/
 ```
