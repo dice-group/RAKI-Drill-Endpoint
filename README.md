@@ -2,11 +2,11 @@
 
 Part of RAKI D6.1
 
-## 1. Creating an endpoint for DRILL manually 
+## 1. Creating an endpoint for DRILL manually
 Here, we provide each command to create an endpoint to use [DRILL](https://arxiv.org/abs/2106.15373)
 ```sh
 # (1) clone the repo & unzip necessary files.
-git clone https://github.com/dice-group/RAKI-Drill-Endpoint && cd RAKI-Drill-Endpoint 
+git clone https://github.com/dice-group/RAKI-Drill-Endpoint && cd RAKI-Drill-Endpoint
 unzip embeddings.zip && unzip LPs.zip && unzip pre_trained_agents.zip
 # (2) Clone the repository and create a python virtual enviroment via anaconda
 git clone https://github.com/dice-group/DRILL_RAKI && conda create -n drill_env python=3.9 && conda activate drill_env
@@ -22,7 +22,7 @@ python DRILL_RAKI/flask_end_point.py --path_knowledge_base 'DRILL_RAKI/KGs/Biopa
 #...
 # Running on http://0.0.0.0:9080/ # Copy this address
 ```
-### How to use the endpoint  
+### How to use the endpoint
 pick one of the example learning problems and submit it to the system: (requires [jq](https://stedolan.github.io/jq/))
 ```sh
 # (1) Open a new terminal (Ctrl+Alt+T on ubuntu) to verify the endpoint.
@@ -35,14 +35,14 @@ jq '
         "positives": .positive_examples,
         "negatives": .negative_examples
        }' LPs/Biopax/lp.json \
-		   | curl -d@- http://0.0.0.0:9080/concept_learning
+| curl -d@- http://0.0.0.0:9080/concept_learning
 ```
 
 ## 2. Creating an endpoint for DRILL via Docker
 ```sh
-git clone https://github.com/dice-group/RAKI-Drill-Endpoint && cd RAKI-Drill-Endpoint 
+git clone https://github.com/dice-group/RAKI-Drill-Endpoint && cd RAKI-Drill-Endpoint
 unzip LPs # unzip learning problems file to use it later on
-sudo docker build -t drill:latest "." 
+sudo docker build -t drill:latest "."
 # Successfully tagged drill:latest # if you see **done**, all went well
 sudo docker images # to see installed image
 ```
@@ -50,10 +50,10 @@ sudo docker images # to see installed image
 Run the docker image.
 ```
 sudo docker run drill
-# expected to see 
+# expected to see
 # Running on http://172.17.0.2:9080/
 ```
-### How to use the endpoint  
+### How to use the endpoint
 pick one of the example learning problems and submit it to the system: (requires [jq](https://stedolan.github.io/jq/))
   ```sh
 # (1) Open a new terminal (Ctrl+Alt+T on ubuntu) to verify the endpoint.
@@ -67,7 +67,7 @@ jq '
         "positives": .positive_examples,
         "negatives": .negative_examples
        }' LPs/Biopax/lp.json \
-		   | curl -d@- http://172.17.0.2:9080/concept_learning
+| curl -d@- http://172.17.0.2:9080/concept_learning
 ```
   response: (OWL rdf/xml)
   > ```xml
@@ -78,17 +78,17 @@ jq '
   >          xmlns:owl="http://www.w3.org/2002/07/owl#"
   >          xml:base="https://dice-research.org/predictions/1619526593.1690164"
   >          xmlns="https://dice-research.org/predictions/1619526593.1690164#">
-  > 
+  >
   > <owl:Ontology rdf:about="https://dice-research.org/predictions/1619526593.1690164">
   >   <owl:imports rdf:resource="file:///OntoPy/KGs/Biopax/biopax.owl"/>
   > </owl:Ontology>
-  > 
+  >
   > <owl:Class rdf:about="#Pred_0">
   >   <owl:equivalentClass rdf:resource="http://www.biopax.org/examples/glycolysis#pathwayStep"/>
   >   <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">pathwayStep</rdfs:label>
   > </owl:Class>
-  > 
-  > 
+  >
+  >
   > </rdf:RDF>
   > ```
 Congrats!
