@@ -25,6 +25,8 @@ COPY --from=intermediate /data/embeddings ./embeddings
 # pre_trained_agents
 COPY --from=intermediate /data/pre_trained_agents ./pre_trained_agents
 
+COPY drill-endpoint drill-endpoint
+
 EXPOSE 9080
 
-CMD conda run --name conda_env python DRILL_RAKI/flask_end_point.py --path_knowledge_base $KG --path_knowledge_base_embeddings $EMBEDDINGS --pretrained_drill_avg_path $PRE_TRAINED_AGENT
+CMD ./drill-endpoint
