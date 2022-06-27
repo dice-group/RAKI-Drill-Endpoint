@@ -47,12 +47,13 @@ sudo docker build -t drill:latest "."
 sudo docker images # to see installed image
 ```
 
-Run the docker image.
+Run the docker image (timeout in seconds).
 ```sh
 sudo docker run \
 -e KG=KGs/Biopax/biopax.owl \
 -e EMBEDDINGS=embeddings/ConEx_Biopax/ConEx_entity_embeddings.csv \
 -e PRE_TRAINED_AGENT=pre_trained_agents/Biopax/DrillHeuristic_averaging/DrillHeuristic_averaging.pth \
+-e TIMEOUT=15 \
 drill:latest
 # expected to see
 # Running on http://172.17.0.2:9080/
