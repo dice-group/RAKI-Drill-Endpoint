@@ -10,13 +10,11 @@ RUN unzip embeddings.zip && unzip pre_trained_agents.zip
 RUN wget --output-document ontolearn.zip https://github.com/dice-group/Ontolearn/archive/refs/tags/0.5.1.zip && unzip -d tmp ontolearn.zip && mv tmp/* ontolearn
 
 # Dockerfile start
-FROM continuumio/anaconda3
-RUN apt-get update && apt-get install -y unzip
-RUN conda create --quiet --yes --name conda_env python=3.9
+FROM python:3.9
 WORKDIR /data
 
 COPY --from=intermediate /data/ontolearn ./ontolearn/
-RUN conda run --name conda_env pip install -e ./ontolearn/
+RUN pip3 install -e ./ontolearn/
 
 RUN git clone --branch 0.0.2 --depth 1 https://github.com/dice-group/DRILL_RAKI && unzip DRILL_RAKI/KGs.zip
 
