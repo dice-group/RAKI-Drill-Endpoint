@@ -14,6 +14,7 @@ FROM python:3.9
 WORKDIR /data
 
 COPY --from=intermediate /data/ontolearn ./ontolearn/
+RUN pip3 install Cython
 RUN pip3 install -e ./ontolearn/
 
 RUN git clone --branch 0.0.2 --depth 1 https://github.com/dice-group/DRILL_RAKI && unzip DRILL_RAKI/KGs.zip
