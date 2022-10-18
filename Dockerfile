@@ -17,7 +17,8 @@ COPY --from=intermediate /data/ontolearn ./ontolearn/
 RUN pip3 install Cython
 RUN pip3 install -e ./ontolearn/
 
-RUN git clone --branch 0.0.2 --depth 1 https://github.com/dice-group/DRILL_RAKI && unzip DRILL_RAKI/KGs.zip
+COPY DRILL_RAKI DRILL_RAKI
+RUN unzip DRILL_RAKI/KGs.zip
 
 # embeddings
 COPY --from=intermediate /data/embeddings ./embeddings
